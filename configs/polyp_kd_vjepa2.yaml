@@ -1,0 +1,47 @@
+# Edge-Guided Cross-Attention Segmentation — Polyp + V-JEPA2 KD
+dataset: polyp
+data_root: dataset/TrainDataset
+test_root: dataset/TestDataset
+in_channels: 3
+num_classes: 2
+img_size: [352, 352]
+class_names: [bg, polyp]
+
+# model
+backbone: pvt_v2_b2
+num_heads: 8
+attn_drop: 0.0
+proj_drop: 0.0
+
+# knowledge distillation
+kd:
+  enabled: true
+  teacher: vjepa2
+  teacher_model: facebook/vjepa2-vitl-fpc64-256
+  teacher_img_size: 352
+  kd_weight: 1.0
+
+# training
+epochs: 100
+batch_size: 16
+lr_backbone: 0.0001
+lr_new: 0.001
+weight_decay: 0.0001
+warmup_epochs: 5
+grad_clip: 1.0
+amp: true
+
+# evaluation
+ignore_background: true
+val_every: 1
+early_stopping_patience: 10
+
+# polyp test datasets for benchmark
+test_datasets: [Kvasir, CVC-ClinicDB, CVC-300, CVC-ColonDB, ETIS-LaribPolypDB]
+
+# logging
+log_dir: runs
+save_every: 25
+tensorboard: true
+num_workers: 4
+seed: 42

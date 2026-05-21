@@ -1,0 +1,37 @@
+# Edge-Guided Cross-Attention Segmentation — Synapse config
+dataset: synapse
+data_root: dataset/preprocessed_synapse_CASCADE
+list_dir: dataset/preprocessed_synapse_CASCADE
+in_channels: 1
+num_classes: 9
+img_size: [224, 224]
+class_names: [bg, aorta, gallbladder, left_kidney, right_kidney, liver, pancreas, spleen, stomach]
+nclass: 9   # for Synapse label remapping
+
+# model
+backbone: pvt_v2_b2
+num_heads: 8
+attn_drop: 0.0
+proj_drop: 0.0
+
+# training
+epochs: 400
+batch_size: 16
+lr_backbone: 0.0001
+lr_new: 0.001
+weight_decay: 0.0001
+warmup_epochs: 10
+grad_clip: 1.0
+amp: true
+
+# evaluation
+ignore_background: true
+val_every: 1
+early_stopping_patience: 50
+
+# logging
+log_dir: runs
+save_every: 50
+tensorboard: true
+num_workers: 4
+seed: 42

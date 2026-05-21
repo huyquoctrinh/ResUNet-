@@ -1,0 +1,52 @@
+# Ablation: D2_full_dino | Dataset: polyp | Phase 2
+backbone: pvt_v2_b0
+num_heads: 8
+attn_drop: 0.0
+proj_drop: 0.0
+lr_backbone: 0.0001
+lr_new: 0.001
+weight_decay: 0.0001
+warmup_epochs: 5
+grad_clip: 1.0
+amp: true
+val_every: 1
+early_stopping_patience: 50
+log_dir: runs
+save_every: 25
+tensorboard: true
+num_workers: 4
+seed: 42
+dataset: polyp
+data_root: dataset/TrainDataset
+test_root: dataset/TestDataset
+in_channels: 3
+num_classes: 2
+img_size:
+- 352
+- 352
+class_names:
+- bg
+- polyp
+epochs: 100
+batch_size: 8
+test_datasets:
+- Kvasir
+- CVC-ClinicDB
+- CVC-300
+- CVC-ColonDB
+- ETIS-LaribPolypDB
+ignore_background: true
+ablation:
+  name: D2_full_dino
+  edge_type: learned
+  attention_type: cross_attention
+  q_source: encoder
+  attention_scales:
+  - enc3
+  - enc4
+kd:
+  enabled: true
+  teacher: dinov3
+  teacher_model: facebook/dinov3-vitb16-pretrain-lvd1689m
+  kd_weight: 1.0
+  teacher_img_size: 352

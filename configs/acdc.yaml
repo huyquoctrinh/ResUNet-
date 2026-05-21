@@ -1,0 +1,36 @@
+# Edge-Guided Cross-Attention Segmentation — ACDC config
+dataset: acdc
+data_root: dataset/ACDC
+list_dir: dataset/ACDC/lists_ACDC
+in_channels: 1
+num_classes: 4
+img_size: [224, 224]
+class_names: [bg, RV, Myo, LV]
+
+# model
+backbone: pvt_v2_b2
+num_heads: 8
+attn_drop: 0.0
+proj_drop: 0.0
+
+# training
+epochs: 300
+batch_size: 16
+lr_backbone: 0.0001
+lr_new: 0.001
+weight_decay: 0.0001
+warmup_epochs: 10
+grad_clip: 1.0
+amp: true
+
+# evaluation
+ignore_background: true
+val_every: 1
+early_stopping_patience: 50
+
+# logging
+log_dir: runs
+save_every: 50
+tensorboard: true
+num_workers: 4
+seed: 42
