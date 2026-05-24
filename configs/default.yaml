@@ -1,0 +1,58 @@
+model:
+  base_dim: 48
+  depths: [1, 1, 1, 1]
+  patch_size: 4
+  n_experts: 3
+  kernel_sizes: [3, 5, 7]
+  ssm_d_state: 16
+  ssm_d_conv: 4
+  ssm_expand: 2
+  ffn_ratio: 4
+  router_mode: soft
+  deep_supervision: false
+  pretrained_encoder: null     # path to ImageNet-pretrained encoder checkpoint
+  encoder_type: moconv_ssm    # moconv_ssm | pvt_v2
+  pvt_variant: b2             # b0 | b1 | b2 | b3 | b4 | b5
+  pvt_pretrained: true
+
+training:
+  epochs: 300
+  batch_size: 4
+  optimizer: adamw
+  lr: 1.0e-4
+  weight_decay: 1.0e-5
+  scheduler: cosine
+  warmup_epochs: 10
+  loss_alpha: 0.5
+  grad_clip: 1.0
+  seed: 42
+  num_workers: 4
+  pin_memory: true
+  amp: true
+  early_stopping:
+    enabled: true
+    patience: 30
+    min_delta: 1.0e-4
+
+evaluation:
+  sliding_window: true
+  overlap: 0.5
+  ignore_background: true
+
+logging:
+  log_dir: outputs
+  save_every: 50
+  tensorboard: true
+
+distillation:
+  enabled: false
+  strategies: [encoder_feature]           # Strategy B: DINOv3 encoder KD
+  teacher_type: dino
+  dino_model: facebook/dinov3-vits16-pretrain-lvd1689m
+  dino_img_size: 224
+  extract_blocks: [2, 5, 8, 11]           # one per student stage (4 stages)
+  kd_loss_mode: mse                       # mse | mse_norm | cosine | smooth_l1
+  kd_warmup_epochs: 20                    # longer warmup = encoder less yanked
+  lambda_kd:
+    encoder_feature: 0.01                 # MSE can be large; start small
+

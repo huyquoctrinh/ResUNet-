@@ -1,0 +1,34 @@
+_base_: default.yaml
+
+data:
+  dataset: synapse
+  root: /home/mamba/ML_project/Testing/Huy/med_seg/dataset/preprocessed_synapse_CASCADE
+  in_channels: 1
+  num_classes: 9
+  spatial_dim: 2
+  img_size: [256, 256]
+  label_remap: pranet_9class
+  class_names:
+    - Background
+    - Spleen
+    - RightKidney
+    - LeftKidney
+    - Gallbladder
+    - Pancreas
+    - Liver
+    - Stomach
+    - Aorta
+
+model:
+  patch_size: 4
+  spatial_dim: 2
+  deep_supervision: true
+  pretrained_encoder: /home/mamba/ML_project/Testing/Huy/med_seg/encoder_training/outputs/best_encoder.pth
+
+training:
+  batch_size: 32
+  epochs: 300
+  lr: 1.0e-4
+  weight_decay: 1.0e-4
+  warmup_epochs: 2
+  loss_alpha: 0.3      # 0.3*CE + 0.7*Dice (matches PraNet-V2)
